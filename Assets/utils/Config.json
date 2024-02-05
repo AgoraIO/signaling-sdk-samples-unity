@@ -1,0 +1,17 @@
+﻿{
+    "uid": "1",
+    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
+    "channelName": "demo",
+    "serverUrl": "https://agora-token-server-5rci.onrender.com",
+    "tokenExpiryTime": "60",
+    "token": "007eJxSYIgWnf1915x9R3NcBPs/RO5qcfuTO3OxwJFHt0ylwn8eubhVgcHQPDnJPDXZJNU0xcLE1MTSIiXVIM3cNDU1MdnEyNw40ej8/tQCLUaGr9MvMjEyMDEwMjAygPiMDIaAAAAA//+GWyF2",
+    "encryptionMode": 7,
+    "salt": "H1sOfeyJ6glnYs+skaKjEnx43L2vMKeL53ckdsHMLbk=",
+    "cipherKey": "128109cdb2a0319e5ad54db42cd4b18e4de0aeb6309ba4ce3fec81fdb755ff55",
+    "presenceTimeout": 300,
+    "logUpload": false,
+    "logLevel": "debug",
+    "cloudProxy": true,
+    "useStringUserId": false,
+    "rtcToken": "007eJxSYHB//kZo3yqRxklTe1tnce9+Vhcfsajc5swvl+WGZmmmIn0KDIbmyUnmqckmqaYpFiamJpYWKakGaeamqamJySZG5saJfaz7Ug1KGRjefHVmZGSAQBCfkyG30jkjMS8vNYeRwRAQAAD//zeqIfk="
+}
