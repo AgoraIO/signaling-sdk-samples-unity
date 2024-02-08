@@ -48,19 +48,19 @@ Before getting started with this reference app, ensure you have the following se
 
     1. In Unity Hub, Open `signaling-sdk-samples-unity`, Unity Editor opens the project.
        
-       Unity Editor warns of compile errors. Don't worry, you fix them when you import Video SDK for Unity. 
+       Unity Editor warns of compile errors. Don't worry, you fix them when you import Signaling SDK for Unity. 
 
     1. Go `Assets\Scenes`, and open `SampleScene.unity`. The sample scene opens.
          
-    1. Unzip [the latest version of the Agora Video SDK](https://download.agora.io/sdk/release/Agora_Unity_RTM_SDK_v2.1.9.zip?_gl=1*y2lyxl*_ga*MjA2MzYxMjY4Mi4xNzAzMDczMjA1*_ga_BFVGG7E02W*MTcwNzEyMDUzMC4xMi4xLjE3MDcxMjEwODAuMC4wLjA.) to a local folder.
+    1. Unzip [the latest version of the Agora Signaling SDK](https://download.agora.io/sdk/release/Agora_Unity_RTM_SDK_v2.1.9.zip?_gl=1*y2lyxl*_ga*MjA2MzYxMjY4Mi4xNzAzMDczMjA1*_ga_BFVGG7E02W*MTcwNzEyMDUzMC4xMi4xLjE3MDcxMjEwODAuMC4wLjA.) to a local folder.
 
    1. In **Unity**, click **Assets** > **Import Package** > **Custom Package**.
 
-   1. Navigate to the Video SDK package and click **Open**.
+   1. Navigate to the Signaling SDK package and click **Open**.
 
    1. In **Import Unity Package**, click **Import**.
    
-      Unity recompiles the Video SDK samples for Unity and the warnings disappear. 
+      Unity recompiles the Signaling SDK samples for Unity and the warnings disappear. 
 
 1. **Modify the project configuration**
 
