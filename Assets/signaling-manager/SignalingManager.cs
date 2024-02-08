@@ -98,7 +98,7 @@ public class SignalingManager
     }
 
     // Method to handle user login
-    public async void Login(string userName)
+    public async void Login(string userName, string rtmToken)
     {
         if (signalingEngine == null)
         {
@@ -112,7 +112,7 @@ public class SignalingManager
 
         try
         {
-            var (status, response) = await signalingEngine.LoginAsync(configData.token);
+            var (status, response) = await signalingEngine.LoginAsync(rtmToken);
             configData.userName = userName;
 
             if (status.Error)

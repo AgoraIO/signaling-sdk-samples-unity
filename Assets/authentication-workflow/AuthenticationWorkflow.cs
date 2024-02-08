@@ -79,7 +79,7 @@ public class AuthenticationWorkflow : SignalingUI
         else
         {
             await authenticationManager.FetchToken();
-            authenticationManager.Login(userName);
+            authenticationManager.Login(userName, authenticationManager.configData.token);
         }
     }
 

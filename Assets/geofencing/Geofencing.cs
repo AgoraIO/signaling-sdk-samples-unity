@@ -91,7 +91,7 @@ public class Geofencing : SignalingUI
         else
         {
             await geofencingManager.FetchToken();
-            geofencingManager.Login(userName);
+            geofencingManager.Login(userName, geofencingManager.configData.token);
         }
     }
 

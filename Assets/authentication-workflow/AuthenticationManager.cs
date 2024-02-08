@@ -12,7 +12,7 @@ public class TokenStruct
 public class AuthenticationManager : SignalingManager
 {
     // Asynchronously fetches an RTM token from the server
-    public async Task FetchToken()
+    public async Task FetchRTMToken()
     {
         // Check if required parameters are provided in the configuration
         if (string.IsNullOrEmpty(configData.uid) || string.IsNullOrEmpty(configData.serverUrl) || configData.tokenExpiryTime == null)
@@ -35,7 +35,7 @@ public class AuthenticationManager : SignalingManager
         {
             await Task.Yield();
         }
-
+         
         // Check for network or HTTP errors
         if (request.isNetworkError || request.isHttpError)
         {
@@ -47,9 +47,9 @@ public class AuthenticationManager : SignalingManager
         TokenStruct tokenInfo = JsonUtility.FromJson<TokenStruct>(request.downloadHandler.text);
 
         // Log the retrieved token
-        LogInfo($"Retrieved token: {tokenInfo.rtmToken}");
+        LogInfo($"Retrieved token:`1` {tokenInfo.rtmToken}");
 
-        // Update the configuration with the fetched token
+        // Update the configuration with the fetched token`1
         configData.token = tokenInfo.rtmToken;
     }
 

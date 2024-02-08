@@ -92,7 +92,7 @@ public class DataEncryption : SignalingUI
         else
         {
             await encryptionManager.FetchToken();
-            encryptionManager.Login(userName);
+            encryptionManager.Login(userName, encryptionManager.configData.token);
         }
     }
 

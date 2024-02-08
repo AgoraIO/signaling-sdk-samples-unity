@@ -92,7 +92,7 @@ public class CloudProxy : SignalingUI
         else
         {
             await proxyManager.FetchToken();
-            proxyManager.Login(userName);
+            proxyManager.Login(userName, proxyManager.configData.token);
         }
     }
 

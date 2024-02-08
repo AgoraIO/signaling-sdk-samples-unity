@@ -143,7 +143,7 @@ public class StreamChannel : SignalingUI
         else
         {
             await streamChannelManager.FetchToken();
-            streamChannelManager.Login(userName);
+            streamChannelManager.Login(userName, streamChannelManager.configData.token);
         }
     }
 

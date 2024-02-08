@@ -91,7 +91,7 @@ public class Signaling : SignalingUI
         }
         else
         {
-            signalingManager.Login(userName);
+            signalingManager.Login(userName, signalingManager.configData.token);
         }
     }
 
