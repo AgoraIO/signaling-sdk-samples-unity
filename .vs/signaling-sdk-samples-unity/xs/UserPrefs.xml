@@ -9,7 +9,7 @@
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="signaling-sdk-samples-unity" expanded="True" selected="True" />
+          <Node name="signaling-sdk-samples-unity" selected="True" />
         </State>
       </Pad>
     </Pads>
