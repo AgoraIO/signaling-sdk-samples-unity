@@ -1,15 +1,16 @@
-﻿<Properties>
+﻿<Properties StartupConfiguration="{BE92E54F-D6C6-A039-22E4-B9DFF5A2B84F}|">
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="4ec6e9df-5012-4e0c-a325-57e5a3a2d7ae" />
   <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="signaling-sdk-samples-unity" selected="True" />
+          <Node name="signaling-sdk-samples-unity" expanded="True" selected="True" />
         </State>
       </Pad>
     </Pads>
