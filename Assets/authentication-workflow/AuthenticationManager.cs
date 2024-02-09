@@ -1,18 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using System.Data;
+using Agora.Rtm;
 
 // Data structure for holding the RTM token
-public class TokenStruct
+public class RtmTokenStruct
 {
     public string rtmToken;
+}
+
+// Data structure for holding the RTM token
+public class RtcTokenStruct
+{
+    public string rtcToken;
 }
 
 // AuthenticationManager class extends SignalingManager
 public class AuthenticationManager : SignalingManager
 {
+    internal bool isStreamChannelJoined = false;
+
     // Asynchronously fetches an RTM token from the server
-    public async Task FetchRTMToken()
+    public async Task FetchRtmToken()
     {
         // Check if required parameters are provided in the configuration
         if (string.IsNullOrEmpty(configData.uid) || string.IsNullOrEmpty(configData.serverUrl) || configData.tokenExpiryTime == null)
@@ -44,13 +54,102 @@ public class AuthenticationManager : SignalingManager
         }
 
         // Deserialize the response JSON into TokenStruct
-        TokenStruct tokenInfo = JsonUtility.FromJson<TokenStruct>(request.downloadHandler.text);
+        RtmTokenStruct tokenInfo = JsonUtility.FromJson<RtmTokenStruct>(request.downloadHandler.text);
 
         // Log the retrieved token
-        LogInfo($"Retrieved token:`1` {tokenInfo.rtmToken}");
+        LogInfo($"Retrieved rtm token:`1` {tokenInfo.rtmToken}");
 
         // Update the configuration with the fetched token`1
         configData.token = tokenInfo.rtmToken;
+    }
+
+    // Fetch a rtc token
+    public async Task FetchRtcToken(string channelName, string uid)
+    {
+
+        string url = string.Format("{0}/rtc/{1}/{2}/uid/{3}/?expiry={4}", configData.serverUrl, channelName , 1 , uid , configData.tokenExpiryTime);
+        Debug.Log(url);
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        var operation = request.SendWebRequest();
+
+        while (!operation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.Log(request.error);
+            return;
+        }
+
+        RtcTokenStruct tokenInfo = JsonUtility.FromJson<RtcTokenStruct>(request.downloadHandler.text);
+        Debug.Log("Retrieved rtc token : " + tokenInfo.rtcToken);
+        configData.rtcToken = tokenInfo.rtcToken;
+    }
+
+    public async void JoinAndLeaveStreamChannel(string channelName)
+    {
+        if(!isLogin)
+        {
+            await FetchRtmToken();
+            Login(configData.uid, configData.token);
+        }
+        if(!isStreamChannelJoined)
+        {
+            if (signalingChannel == null)
+            {
+                CreateChannel(channelName);
+            }
+
+            // Fetch a rtc token for the stream channel
+            await FetchRtcToken(channelName, "1");
+
+            if (configData.rtcToken == "")
+            {
+                LogInfo("Token was not fetched from the server");
+                return;
+            }
+
+            // Configure the channel options
+            JoinChannelOptions options = new JoinChannelOptions();
+            options.token = configData.rtcToken;
+            options.withMetadata = false;
+            options.withPresence = true;
+            options.withLock = false;
+
+            // Join the stream channel
+            var (status, response) = await signalingChannel.JoinAsync(options);
+            if (status.Error)
+            {
+                LogError(string.Format("Join Status.Reason:{0} ", status.Reason));
+            }
+            else
+            {
+                string str = string.Format("Join Response: channelName:{0} userId:{1}",
+                    response.ChannelName, response.UserId);
+                isStreamChannelJoined = true;
+                LogInfo(str);
+            }
+        }
+        else
+        {
+            var (status, response) = await signalingChannel.LeaveAsync();
+            if (status.Error)
+            {
+                LogError(string.Format("StreamChannel.Leave Status.ErrorCode:{0} ", status.ErrorCode));
+            }
+            else
+            {
+                string str = string.Format("StreamChannel.Leave Response: channelName:{0} userId:{1}",
+                    response.ChannelName, response.UserId);
+                isStreamChannelJoined = false;
+                LogInfo(str);
+            }
+
+        }
+
     }
 
     // Renew the RTM token
@@ -73,7 +172,7 @@ public class AuthenticationManager : SignalingManager
         LogInfo($"OnTokenPrivilegeWillExpire channelName {channelName}");
 
         // Asynchronously fetch a new token
-        await FetchToken();
+        await FetchRtmToken();
 
         // Check if a valid token is retrieved
         if (!string.IsNullOrEmpty(configData.token))

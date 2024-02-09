@@ -91,7 +91,7 @@ public class CloudProxy : SignalingUI
         }
         else
         {
-            await proxyManager.FetchToken();
+            await proxyManager.FetchRtmToken();
             proxyManager.Login(userName, proxyManager.configData.token);
         }
     }

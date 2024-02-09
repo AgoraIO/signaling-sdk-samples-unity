@@ -236,7 +236,7 @@ public class Storage : SignalingUI
         }
         else
         {
-            await storageManager.FetchToken();
+            await storageManager.FetchRtmToken();
             storageManager.Login(userName, storageManager.configData.token);
         }
     }

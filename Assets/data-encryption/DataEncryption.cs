@@ -91,7 +91,7 @@ public class DataEncryption : SignalingUI
         }
         else
         {
-            await encryptionManager.FetchToken();
+            await encryptionManager.FetchRtmToken();
             encryptionManager.Login(userName, encryptionManager.configData.token);
         }
     }

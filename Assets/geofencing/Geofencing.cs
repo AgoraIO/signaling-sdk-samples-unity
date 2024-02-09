@@ -90,7 +90,7 @@ public class Geofencing : SignalingUI
         }
         else
         {
-            await geofencingManager.FetchToken();
+            await geofencingManager.FetchRtmToken();
             geofencingManager.Login(userName, geofencingManager.configData.token);
         }
     }

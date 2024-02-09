@@ -5,7 +5,7 @@ using TMPro;
 public class AuthenticationWorkflow : SignalingUI
 {
     // UI elements
-    internal GameObject loginBtn, sendBtn, subscribeBtn, messageField, userCountObject, userNameField, channelTextObject;
+    internal GameObject loginBtn, sendBtn, subscribeBtn, messageField, userCountObject, userNameField, chnnelNameField;
     internal AuthenticationManager authenticationManager;
 
     public override void Start()
@@ -34,19 +34,29 @@ public class AuthenticationWorkflow : SignalingUI
         sendBtn = AddButton("Send", new Vector3(-83, 14, 0), "Send", new Vector2(120f, 30f));
 
         messageField = AddInputField("Message", new Vector3(-234, 13, 0), "Type your message", new Vector2(160, 30));
-
+        chnnelNameField = AddInputField("chnnelNameField", new Vector3(-234, 54, 0), "Type channel name", new Vector2(160, 30));
         userNameField = AddInputField("UserName", new Vector3(-234, 97, 0), "User ID", new Vector2(160, 30));
-        TMP_InputField userID = userNameField.GetComponent<TMP_InputField>();
-        userID.placeholder.GetComponent<TMP_Text>().text = authenticationManager.configData.uid;
-        userID.interactable = false;
-
         userCountObject = AddLabel("userCount", new Vector3(-50, 135, 0), "User Count", 15);
-        channelTextObject = AddLabel("channelLabel", new Vector3(-236, 56, 0), $"Current channel name is <b>{authenticationManager.configData.channelName}</b>", 13);
 
         // Attach event listeners.
         loginBtn.GetComponent<Button>().onClick.AddListener(Login);
-        subscribeBtn.GetComponent<Button>().onClick.AddListener(Subscribe);
+        subscribeBtn.GetComponent<Button>().onClick.AddListener(JoinAndLeaveStreamChannel);
         sendBtn.GetComponent<Button>().onClick.AddListener(Send);
+
+    }
+
+    // Join or leave the stream channel
+    private void JoinAndLeaveStreamChannel()
+    {
+        string channelName = GameObject.Find("chnnelNameField").GetComponent<TMP_InputField>().text;
+        if(channelName == "")
+        {
+            authenticationManager.LogInfo("Type a stream channel name to create and join the channel");
+        }
+        else
+        {
+            authenticationManager.JoinAndLeaveStreamChannel(channelName);
+        }
     }
 
     // Send a message
@@ -78,7 +88,7 @@ public class AuthenticationWorkflow : SignalingUI
         }
         else
         {
-            await authenticationManager.FetchToken();
+            await authenticationManager.FetchRtmToken();
             authenticationManager.Login(userName, authenticationManager.configData.token);
         }
     }
@@ -129,6 +139,7 @@ public class AuthenticationWorkflow : SignalingUI
         }
         else
         {
+            JoinAndLeaveStreamChannel();
             authenticationManager.Subscribe();
         }
     }
@@ -150,7 +161,7 @@ public class AuthenticationWorkflow : SignalingUI
         DestroyUIElement(messageField);
         DestroyUIElement(userNameField);
         DestroyUIElement(userCountObject);
-        DestroyUIElement(channelTextObject);
+        DestroyUIElement(chnnelNameField);
     }
 
     // Destroy a specific UI element
