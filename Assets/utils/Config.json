@@ -1,10 +1,10 @@
 ﻿{
     "uid": "1",
-    "appId": "",
+    "appId": "17cb7ec4e5d845498de0f75eeac4273a",
     "channelName": "demo",
-    "serverUrl": "",
+    "serverUrl": "https://agora-token-server-5rci.onrender.com",
     "tokenExpiryTime": "60",
-    "token": "",
+    "token": "007eJxSYNjqxnFSa/Kxpfn/Nzaeu5RXcZyzJP7xpbAbV9hPR1xJXi2twGBonpxknppskmqaYmFiamJpkZJqkGZumpqamGxiZG6ceEfhaGqBFiPDtrAERkYGJgZGBkYGEJ+RwRAQAAD//1yjIAo=",
     "encryptionMode": 7,
     "salt": "",
     "cipherKey": "",
