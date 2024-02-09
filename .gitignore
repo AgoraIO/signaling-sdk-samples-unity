@@ -4,7 +4,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
-/Assets/Agora-RTM-Pulgin/
+Assets/Agora-RTM-Plugin/
 
 /Native/obj/
 /Native/libs/
