@@ -28,6 +28,12 @@ public class ConfigData
     public string userName;
 }
 
+public class MessageStruct
+{
+    public string message;
+    public RTM_MESSAGE_TYPE msgType;
+}
+
 // Main Signaling Manager class
 public class SignalingManager
 {
@@ -224,7 +230,7 @@ public class SignalingManager
                      $"message:{@event.message.GetData<string>()} customType:{@event.customType}";
         LogInfo(str);
         string msg = @event.publisher.ToString() + ": " + @event.message.GetData<string>();
-        signalingUI.AddTextToDisplay(msg, Color.blue, TextAlignmentOptions.BaselineRight);
+        signalingUI.AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
         await GetOnlineMembersInChannel(configData.channelName);
     }
 

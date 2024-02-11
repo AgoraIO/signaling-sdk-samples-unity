@@ -32,7 +32,7 @@ public class Signaling : SignalingUI
         userID.interactable = false;
 
         userCountObject = AddLabel("userCount", new Vector3(-62, 130, 0), "User Count", 15);
-        channelTextObject = AddLabel("channelLabel", new Vector3(-236, 56, 0), $"Current channel name is <b>{signalingManager.configData.channelName}</b>", 13);
+
     }
 
     // Method to find the canvas
@@ -78,7 +78,7 @@ public class Signaling : SignalingUI
         }
         signalingManager.SendChannelMessage(msg);
         msg = signalingManager.configData.uid + ": " + msg;
-        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
     }
 
     // Method to handle user login/logout
