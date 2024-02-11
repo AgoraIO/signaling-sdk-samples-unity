@@ -1,0 +1,17 @@
+﻿{
+    "uid": "1",
+    "appId": "",
+    "channelName": "demo",
+    "serverUrl": "",
+    "tokenExpiryTime": "60",
+    "token": "",
+    "encryptionMode": 7,
+    "salt": "",
+    "cipherKey": "",
+    "presenceTimeout": 300,
+    "logUpload": false,
+    "logLevel": "debug",
+    "cloudProxy": true,
+    "useStringUserId": false,
+    "rtcToken": ""
+}
