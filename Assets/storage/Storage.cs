@@ -56,9 +56,6 @@ public class Storage : SignalingUI
 
         // Create an input field for user ID;
         userNameField = AddInputField("UserName", new Vector3(-234, 97, 0), "User ID", new Vector2(160, 30));
-        TMP_InputField userID = userNameField.GetComponent<TMP_InputField>();
-        userID.placeholder.GetComponent<TMP_Text>().text = storageManager.configData.uid;
-        userID.interactable = false;
 
         // Create a label to show the user count.
         userCountObject = AddLabel("userCount", new Vector3(-50, 135, 0), "User Count", 15);
@@ -222,7 +219,7 @@ public class Storage : SignalingUI
 
         storageManager.SendChannelMessage(msg);
         msg = storageManager.configData.uid + ": " + msg;
-        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
     }
 
     // Event handler for user login/logout
@@ -236,7 +233,7 @@ public class Storage : SignalingUI
         }
         else
         {
-            await storageManager.FetchRtmToken();
+            await storageManager.FetchRtmToken(userName);
             storageManager.Login(userName, storageManager.configData.token);
         }
     }

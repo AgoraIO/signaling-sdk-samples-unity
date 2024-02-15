@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
-using System.Data;
 using Agora.Rtm;
 
 // Data structure for holding the RTM token
@@ -22,13 +21,19 @@ public class AuthenticationManager : SignalingManager
     internal bool isStreamChannelJoined = false;
 
     // Asynchronously fetches an RTM token from the server
-    public async Task FetchRtmToken()
+    public async Task FetchRtmToken(string userName)
     {
         // Check if required parameters are provided in the configuration
         if (string.IsNullOrEmpty(configData.uid) || string.IsNullOrEmpty(configData.serverUrl) || configData.tokenExpiryTime == null)
         {
             LogInfo("Please specify all required parameters in the config.json file to fetch a token from the server");
             return;
+        }
+
+        // Use user name as UID
+        if (userName != "")
+        {
+            configData.uid = userName;
         }
 
         // Construct the URL to request the RTM token
@@ -57,7 +62,7 @@ public class AuthenticationManager : SignalingManager
         RtmTokenStruct tokenInfo = JsonUtility.FromJson<RtmTokenStruct>(request.downloadHandler.text);
 
         // Log the retrieved token
-        LogInfo($"Retrieved rtm token:`1` {tokenInfo.rtmToken}");
+        LogInfo($"Retrieved rtm token: {tokenInfo.rtmToken}");
 
         // Update the configuration with the fetched token`1
         configData.token = tokenInfo.rtmToken;
@@ -68,7 +73,6 @@ public class AuthenticationManager : SignalingManager
     {
 
         string url = string.Format("{0}/rtc/{1}/{2}/uid/{3}/?expiry={4}", configData.serverUrl, channelName , 1 , uid , configData.tokenExpiryTime);
-        Debug.Log(url);
         UnityWebRequest request = UnityWebRequest.Get(url);
 
         var operation = request.SendWebRequest();
@@ -93,7 +97,7 @@ public class AuthenticationManager : SignalingManager
     {
         if(!isLogin)
         {
-            await FetchRtmToken();
+            await FetchRtmToken(configData.uid);
             Login(configData.uid, configData.token);
         }
         if(!isStreamChannelJoined)
@@ -172,7 +176,7 @@ public class AuthenticationManager : SignalingManager
         LogInfo($"OnTokenPrivilegeWillExpire channelName {channelName}");
 
         // Asynchronously fetch a new token
-        await FetchRtmToken();
+        await FetchRtmToken(configData.uid);
 
         // Check if a valid token is retrieved
         if (!string.IsNullOrEmpty(configData.token))

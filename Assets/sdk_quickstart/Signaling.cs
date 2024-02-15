@@ -29,7 +29,7 @@ public class Signaling : SignalingUI
 
         TMP_InputField userID = userNameField.GetComponent<TMP_InputField>();
         userID.placeholder.GetComponent<TMP_Text>().text = signalingManager.configData.uid;
-        userID.interactable = false;
+        userID.interactable = true;
 
         userCountObject = AddLabel("userCount", new Vector3(-62, 130, 0), "User Count", 15);
         channelTextObject = AddLabel("channelLabel", new Vector3(-236, 56, 0), $"Current channel name is <b>{signalingManager.configData.channelName}</b>", 13);
@@ -78,7 +78,7 @@ public class Signaling : SignalingUI
         }
         signalingManager.SendChannelMessage(msg);
         msg = signalingManager.configData.uid + ": " + msg;
-        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
     }
 
     // Method to handle user login/logout
@@ -133,11 +133,11 @@ public class Signaling : SignalingUI
     }
 
     // OnDestroy method to clean up when the object is destroyed
-    void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         signalingManager.DestroyEngine();
         DestroyAllUIElements();
-        ClearMessages();
     }
 
     // Method to destroy all UI elements

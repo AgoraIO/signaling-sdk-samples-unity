@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using TMPro;
+using io.agora.rtm.demo;
 
 // Serializable class for storing configuration data
 [Serializable]
@@ -25,7 +26,6 @@ public class ConfigData
     public LOG_LEVEL logLevel;
     public bool cloudProxy;
     public bool useStringUserId;
-    public string userName;
 }
 
 // Main Signaling Manager class
@@ -112,15 +112,17 @@ public class SignalingManager
         try
         {
             var result= await signalingEngine.LoginAsync(rtmToken);
-            configData.userName = userName;
-
+            if(userName != "")
+            {
+                configData.uid = userName;
+            }
             if (result.Status.Error)
             {
                 LogError($"Error during login: {result.Status.Reason}");
             }
             else
             {
-                Debug.Log($"Login successful. Response: {result.Response}");
+                LogInfo($"Login successful. Response: {result.Response}");
                 isLogin = true;
             }
         }
@@ -158,15 +160,13 @@ public class SignalingManager
     // Method to get online members in a channel
     public async Task GetOnlineMembersInChannel(string channel)
     {
-        PresenceOptions options = new PresenceOptions()
-        {
-            includeUserId = true,
-            includeState = true,
-            page = ""
-        };
+
+        GetOnlineUsersOptions options = new GetOnlineUsersOptions();
+        options.includeState = true;
+        options.includeUserId = true;
 
         IRtmPresence rtmPresence = signalingEngine.GetPresence();
-        var result = await rtmPresence.WhoNowAsync(channel, RTM_CHANNEL_TYPE.MESSAGE, options);
+        var result = await rtmPresence.GetOnlineUsersAsync(configData.channelName, RTM_CHANNEL_TYPE.MESSAGE, options);
         userStateList = result.Response.UserStateList;
         userCount = result.Response.UserStateList.Length;
         string info = $"WhoNow Response: count:{userCount}, nextPage:{result.Response.NextPage}";
@@ -178,12 +178,12 @@ public class SignalingManager
     {
         if (!isLogin)
         {
-            Debug.Log("Login first to subscribe to a channel");
+            LogInfo("Login first to subscribe to a channel");
             return;
         }
         if (configData.channelName == "")
         {
-            Debug.Log("Please specify a channel name in the config.json file");
+            LogInfo("Please specify a channel name in the config.json file");
             return;
         }
         SubscribeOptions subscribeOptions = new SubscribeOptions()
@@ -207,10 +207,22 @@ public class SignalingManager
     }
 
     // Method to send a message to a channel
-    public void SendChannelMessage(String msg)
+    public async void SendChannelMessage(string msg)
     {
+        
         PublishOptions options = new PublishOptions();
-        signalingEngine.PublishAsync(configData.channelName, msg, options);
+        options.channelType = RTM_CHANNEL_TYPE.MESSAGE;
+        options.customType = "string";
+        var result = await signalingEngine.PublishAsync(configData.channelName, msg, options);
+        if (result.Status.Error)
+        {
+            LogError(string.Format("rtmClient.Publish Status.ErrorCode:{0} ", result.Status.ErrorCode));
+        }
+        else
+        {
+            string info = string.Format("Message published successfully");
+            LogInfo(info);
+        }
     }
 
     // Event Handlers
@@ -223,7 +235,7 @@ public class SignalingManager
                      $"message:{@event.message.GetData<string>()} customType:{@event.customType}";
         LogInfo(str);
         string msg = @event.publisher.ToString() + ": " + @event.message.GetData<string>();
-        signalingUI.AddTextToDisplay(msg, Color.blue, TextAlignmentOptions.BaselineRight);
+        signalingUI.AddTextToDisplay(msg, Color.gray, TextAlignmentOptions.Left);
         await GetOnlineMembersInChannel(configData.channelName);
     }
 
@@ -309,6 +321,7 @@ public class SignalingManager
         signalingEngine?.Dispose();
         signalingEngine = null;
         signalingChannel = null;
+        signalingUI.ClearMessages();
     }
 
     // Method to log information
@@ -316,4 +329,5 @@ public class SignalingManager
     {
         Debug.Log(message);
     }
+
 }

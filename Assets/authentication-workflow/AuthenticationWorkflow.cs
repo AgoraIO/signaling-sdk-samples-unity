@@ -75,7 +75,7 @@ public class AuthenticationWorkflow : SignalingUI
         }
         authenticationManager.SendChannelMessage(msg);
         msg = authenticationManager.configData.uid + ": " + msg;
-        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
     }
 
     // Handle user login
@@ -88,7 +88,7 @@ public class AuthenticationWorkflow : SignalingUI
         }
         else
         {
-            await authenticationManager.FetchRtmToken();
+            await authenticationManager.FetchRtmToken(userName);
             authenticationManager.Login(userName, authenticationManager.configData.token);
         }
     }

@@ -81,7 +81,7 @@ public class SignalingUI : MonoBehaviour
         return labelGo;
     }
 
-
+    // Add text messages dynamically to the panel
     public void AddTextToDisplay(string text, Color bgColor, TextAlignmentOptions alignment)
     {
         // Create a new UI panel for background
@@ -103,16 +103,29 @@ public class SignalingUI : MonoBehaviour
         textMesh.text = text;
         textMesh.fontSize = 25;
         textMesh.color = Color.white;
+
+        // Set the alignment of the TextMeshProUGUI component
         textMesh.alignment = alignment;
 
         messages.Add(new Tuple<GameObject, GameObject>(newTextObject, newPanelObject)); // Using Tuple
 
-        // Set the RectTransform properties for left alignment
+        // Set the RectTransform properties based on alignment
         RectTransform textRectTransform = newTextObject.GetComponent<RectTransform>();
         textRectTransform.localScale = Vector3.one;
-        textRectTransform.anchorMin = new Vector2(0, 0.5f); // Left-aligned
-        textRectTransform.anchorMax = new Vector2(0, 0.5f); // Left-aligned
-        textRectTransform.pivot = new Vector2(0, 0.5f); // Left-aligned
+
+        switch (alignment)
+        {
+            case TextAlignmentOptions.Left:
+                textRectTransform.pivot = new Vector2(0f, 0.5f);
+                textRectTransform.anchorMin = new Vector2(0f, 0.5f);
+                textRectTransform.anchorMax = new Vector2(0f, 0.5f);
+                break;
+            case TextAlignmentOptions.Right:
+                textRectTransform.pivot = new Vector2(1f, 0.5f);
+                textRectTransform.anchorMin = new Vector2(1f, 0.5f);
+                textRectTransform.anchorMax = new Vector2(1f, 0.5f);
+                break;
+        }
 
         // Set the size of the text box to match the text
         textRectTransform.sizeDelta = new Vector2(textMesh.preferredWidth, textMesh.preferredHeight);
@@ -121,12 +134,19 @@ public class SignalingUI : MonoBehaviour
         textRectTransform.anchoredPosition = Vector2.zero;
     }
 
+    // Clear messages from chat section
     public void ClearMessages()
     {
-        foreach(var message in messages)
+        foreach (var message in messages)
         {
             Destroy(message.Item1);
             Destroy(message.Item2);
         }
+    }
+
+    // Clean up before the UI destroys
+    public virtual void OnDestroy()
+    {
+        ClearMessages();
     }
 }

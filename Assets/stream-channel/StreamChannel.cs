@@ -39,9 +39,6 @@ public class StreamChannel : SignalingUI
         joinTopicBtn = AddButton("joinTopicBtn", new Vector3(-83, 15, 0), "Join Topic", new Vector2(120f, 30f));
 
         userNameField = AddInputField("UserName", new Vector3(-234, 97, 0), "User ID", new Vector2(160, 30));
-        TMP_InputField userID = userNameField.GetComponent<TMP_InputField>();
-        userID.placeholder.GetComponent<TMP_Text>().text = streamChannelManager.configData.uid;
-        userID.interactable = false;
 
         userCountObject = AddLabel("userCount", new Vector3(-62, 130, 0), "User Count", 15);
 
@@ -120,7 +117,7 @@ public class StreamChannel : SignalingUI
             streamChannelManager.SendTopicMessage(msg, topic);
             msg = $"Topic: {topic}, Message: {msg}";
             streamChannelManager.SendChannelMessage(msg);
-            AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+            AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
         }
     }
 
@@ -142,7 +139,7 @@ public class StreamChannel : SignalingUI
         }
         else
         {
-            await streamChannelManager.FetchRtmToken();
+            await streamChannelManager.FetchRtmToken(userName);
             streamChannelManager.Login(userName, streamChannelManager.configData.token);
         }
     }

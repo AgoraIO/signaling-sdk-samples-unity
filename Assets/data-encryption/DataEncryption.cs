@@ -27,10 +27,6 @@ public class DataEncryption : SignalingUI
         messageField = AddInputField("Message", new Vector3(-234, 13, 0), "Type your message", new Vector2(160, 30));
         userNameField = AddInputField("UserName", new Vector3(-234, 97, 0), "User ID", new Vector2(160, 30));
 
-        TMP_InputField userID = userNameField.GetComponent<TMP_InputField>();
-        userID.placeholder.GetComponent<TMP_Text>().text = encryptionManager.configData.uid;
-        userID.interactable = false;
-
         userCountObject = AddLabel("userCount", new Vector3(-62, 130, 0), "User Count", 15);
         channelTextObject = AddLabel("channelLabel", new Vector3(-236, 56, 0), $"Current channel name is <b>{encryptionManager.configData.channelName}</b>", 13);
     }
@@ -78,7 +74,7 @@ public class DataEncryption : SignalingUI
 
         encryptionManager.SendChannelMessage(msg);
         msg = encryptionManager.configData.uid + ": " + msg;
-        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Left);
+        AddTextToDisplay(msg, Color.grey, TextAlignmentOptions.Right);
     }
 
     // Method to handle user login/logout
@@ -91,7 +87,7 @@ public class DataEncryption : SignalingUI
         }
         else
         {
-            await encryptionManager.FetchRtmToken();
+            await encryptionManager.FetchRtmToken(userName);
             encryptionManager.Login(userName, encryptionManager.configData.token);
         }
     }
