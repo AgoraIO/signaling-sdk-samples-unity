@@ -120,30 +120,30 @@ public class AuthenticationManager : SignalingManager
             options.withLock = false;
 
             // Join the stream channel
-            var (status, response) = await signalingChannel.JoinAsync(options);
-            if (status.Error)
+            var result = await signalingChannel.JoinAsync(options);
+            if (result.Status.Error)
             {
-                LogError(string.Format("Join Status.Reason:{0} ", status.Reason));
+                LogError(string.Format("Join Status.Reason:{0} ", result.Status.Reason));
             }
             else
             {
                 string str = string.Format("Join Response: channelName:{0} userId:{1}",
-                    response.ChannelName, response.UserId);
+                    result.Response.ChannelName, result.Response.UserId);
                 isStreamChannelJoined = true;
                 LogInfo(str);
             }
         }
         else
         {
-            var (status, response) = await signalingChannel.LeaveAsync();
-            if (status.Error)
+            var result = await signalingChannel.LeaveAsync();
+            if (result.Status.Error)
             {
-                LogError(string.Format("StreamChannel.Leave Status.ErrorCode:{0} ", status.ErrorCode));
+                LogError(string.Format("StreamChannel.Leave Status.ErrorCode:{0} ", result.Status.ErrorCode));
             }
             else
             {
                 string str = string.Format("StreamChannel.Leave Response: channelName:{0} userId:{1}",
-                    response.ChannelName, response.UserId);
+                    result.Response.ChannelName, result.Response.UserId);
                 isStreamChannelJoined = false;
                 LogInfo(str);
             }

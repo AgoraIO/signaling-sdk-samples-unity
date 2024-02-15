@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Agora.Rtm;
 using TMPro;
+using System;
+using System.Text;
 
 public class StreamChannelManager : AuthenticationManager
 {
@@ -28,16 +30,16 @@ public class StreamChannelManager : AuthenticationManager
         options.withPresence = true;
         options.withLock = false;
 
-        var (status, response) = await signalingChannel.JoinAsync(options);
-        if (status.Error)
+        var result = await signalingChannel.JoinAsync(options);
+        if (result.Status.Error)
         {
             isChannelJoined = false;
-            LogError(string.Format("Join Status.Reason:{0} ", status.ErrorCode));
+            LogError(string.Format("Join Status.Reason:{0} ", result.Status.ErrorCode));
         }
         else
         {
             string str = string.Format("Join Response: channelName:{0} userId:{1}",
-                response.ChannelName, response.UserId);
+                result.Response.ChannelName, result.Response.UserId);
             isChannelJoined = true;
             LogInfo(str);
         }
@@ -51,16 +53,16 @@ public class StreamChannelManager : AuthenticationManager
             return;
         }
 
-        var (status, response) = await signalingChannel.LeaveAsync();
+        var result = await signalingChannel.LeaveAsync();
 
-        if (status.Error)
+        if (result.Status.Error)
         {
-            LogError(string.Format("StreamChannel.Leave Status.ErrorCode:{0} ", status.ErrorCode));
+            LogError(string.Format("StreamChannel.Leave Status.ErrorCode:{0} ", result.Status.ErrorCode));
         }
         else
         {
             string str = string.Format("StreamChannel.Leave Response: channelName:{0} userId:{1}",
-                response.ChannelName, response.UserId);
+                result.Response.ChannelName, result.Response.UserId);
             isChannelJoined = false;
             LogInfo(str);
         }
@@ -75,15 +77,15 @@ public class StreamChannelManager : AuthenticationManager
             meta = "My topic",
             syncWithMedia = true
         };
-        var (status, response) = await signalingChannel.JoinTopicAsync(topic, options);
-        if (status.Error)
+        var result = await signalingChannel.JoinTopicAsync(topic, options);
+        if (result.Status.Error)
         {
-            LogError(string.Format("signalingChannel.JoinTopic Status.Reason:{0} ", status.Reason));
+            LogError(string.Format("signalingChannel.JoinTopic Status.Reason:{0} ", result.Status.Reason));
         }
         else
         {
             string str = string.Format("signalingChannel.JoinTopic Response: channelName:{0} userId:{1} topic:{2} meta:{3}",
-              response.ChannelName, response.UserId, response.Topic, response.Meta);
+              result.Response.ChannelName, result.Response.UserId, result.Response.Topic, result.Response.Meta);
             isTopicJoined = false;
             LogInfo(str);
         }
@@ -97,16 +99,16 @@ public class StreamChannelManager : AuthenticationManager
             return;
         }
 
-        var (status, response) = await signalingChannel.LeaveTopicAsync(topic);
+        var result = await signalingChannel.LeaveTopicAsync(topic);
 
-        if (status.Error)
+        if (result.Status.Error)
         {
-            LogError(string.Format("signalingChannel.LeaveTopic Status.Reason:{0} ", status.Reason));
+            LogError(string.Format("signalingChannel.LeaveTopic Status.Reason:{0} ", result.Status.Reason));
         }
         else
         {
             string str = string.Format("signalingChannel.LeaveTopic Response: channelName:{0} userId:{1} topic:{2} meta:{3}",
-              response.ChannelName, response.UserId, response.Topic, response.Meta);
+              result.Response.ChannelName, result.Response.UserId, result.Response.Topic, result.Response.Meta);
             isTopicJoined = false;
             LogInfo(str);
         }
@@ -126,18 +128,18 @@ public class StreamChannelManager : AuthenticationManager
             return;
         }
 
-        PublishOptions options = new PublishOptions();
+        TopicMessageOptions options = new TopicMessageOptions();
 
-        var (status, response) = await signalingChannel.PublishTopicMessageAsync(topic, msg, options);
-        if(status.Error)
+        var result = await signalingChannel.PublishTopicMessageAsync(topic, Encoding.UTF8.GetBytes(msg), options);
+        if(result.Status.Error)
         {
-            LogError(string.Format("signalingChannel.PublishTopicMessageAsync Status.Reason:{0} ", status.Reason));
+            LogError(string.Format("signalingChannel.PublishTopicMessageAsync Status.Reason:{0} ", result.Status.Reason));
         }
         else
         {
             msg = "Topic name:" + topic + "message: " + msg;
             signalingUI.AddTextToDisplay(msg, Color.blue, TextAlignmentOptions.BaselineRight);
-            LogInfo("StreamChannel.PublishTopicMessage  ret:" + status.ErrorCode);
+            LogInfo("StreamChannel.PublishTopicMessage  ret:" + result.Status.ErrorCode);
         }
     }
 

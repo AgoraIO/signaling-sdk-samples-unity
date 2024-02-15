@@ -84,7 +84,6 @@ public class SignalingManager
         signalingEngine.OnTopicEvent += OnTopicEvent;
         signalingEngine.OnStorageEvent += OnStorageEvent;
         signalingEngine.OnLockEvent += OnLockEvent;
-        signalingEngine.OnConnectionStateChange += OnConnectionStateChange;
         signalingEngine.OnTokenPrivilegeWillExpire += OnTokenPrivilegeWillExpire;
     }
 
@@ -112,16 +111,16 @@ public class SignalingManager
 
         try
         {
-            var (status, response) = await signalingEngine.LoginAsync(rtmToken);
+            var result= await signalingEngine.LoginAsync(rtmToken);
             configData.userName = userName;
 
-            if (status.Error)
+            if (result.Status.Error)
             {
-                LogError($"Error during login: {status.Reason}");
+                LogError($"Error during login: {result.Status.Reason}");
             }
             else
             {
-                Debug.Log($"Login successful. Response: {response}");
+                Debug.Log($"Login successful. Response: {result.Response}");
                 isLogin = true;
             }
         }
@@ -167,10 +166,10 @@ public class SignalingManager
         };
 
         IRtmPresence rtmPresence = signalingEngine.GetPresence();
-        var (status, response) = await rtmPresence.WhoNowAsync(channel, RTM_CHANNEL_TYPE.MESSAGE, options);
-        userStateList = response.UserStateList;
-        userCount = response.UserStateList.Length;
-        string info = $"WhoNow Response: count:{userCount}, nextPage:{response.NextPage}";
+        var result = await rtmPresence.WhoNowAsync(channel, RTM_CHANNEL_TYPE.MESSAGE, options);
+        userStateList = result.Response.UserStateList;
+        userCount = result.Response.UserStateList.Length;
+        string info = $"WhoNow Response: count:{userCount}, nextPage:{result.Response.NextPage}";
         LogInfo(info);
     }
 
@@ -289,18 +288,6 @@ public class SignalingManager
             }
         }
         LogInfo(info);
-    }
-
-    // Method to handle connection state change events
-    public void OnConnectionStateChange(string channelName, RTM_CONNECTION_STATE state, RTM_CONNECTION_CHANGE_REASON reason)
-    {
-        string str1 = $"OnConnectionStateChange channelName {channelName}: state:{state} reason:{reason}";
-        if (state == RTM_CONNECTION_STATE.FAILED || state == RTM_CONNECTION_STATE.DISCONNECTED)
-        {
-            isLogin = false;
-            isSubscribed = false;
-        }
-        LogInfo(str1);
     }
 
     // Method to handle token privilege will expire event

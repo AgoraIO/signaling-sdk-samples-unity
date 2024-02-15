@@ -38,14 +38,14 @@ public class StorageManager : AuthenticationManager
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
 
         // Set user metadata asynchronously
-        var (status, response) = await rtmStorage.SetUserMetadataAsync(uid, rtmMetadata, metadataOptions);
-        if (status.Error)
+        var result = await rtmStorage.SetUserMetadataAsync(uid, rtmMetadata, metadataOptions);
+        if (result.Status.Error)
         {
-            LogError($"SetUserMetadata Status.ErrorCode:{status.ErrorCode}");
+            LogError($"SetUserMetadata Status.ErrorCode:{result.Status.ErrorCode}");
         }
         else
         {
-            LogInfo($"SetUserMetadata Response : userId:{response.UserId}");
+            LogInfo($"SetUserMetadata Response : userId:{result.Response.UserId}");
         }
     }
 
@@ -73,14 +73,14 @@ public class StorageManager : AuthenticationManager
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
 
         // Set channel metadata asynchronously
-        var (status, response) = await rtmStorage.SetChannelMetadataAsync(channelName, RTM_CHANNEL_TYPE.MESSAGE, rtmMetadata, metadataOptions, lockName);
-        if (status.Error)
+        var result = await rtmStorage.SetChannelMetadataAsync(channelName, RTM_CHANNEL_TYPE.MESSAGE, rtmMetadata, metadataOptions, lockName);
+        if (result.Status.Error)
         {
-            LogError($"SetChannelMetadata Status.reason:{status.Reason}");
+            LogError($"SetChannelMetadata Status.reason:{result.Status.Reason}");
         }
         else
         {
-            LogInfo($"SetChannelMetadata Response : userId:{response}");
+            LogInfo($"SetChannelMetadata Response : channelName:{result.Response.ChannelName}");
         }
     }
 
@@ -114,14 +114,14 @@ public class StorageManager : AuthenticationManager
 
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
         // Update user metadata asynchronously
-        var (status, response) = await rtmStorage.UpdateUserMetadataAsync(uid, rtmMetadata, metadataOptions);
-        if (status.Error)
+        var result = await rtmStorage.UpdateUserMetadataAsync(uid, rtmMetadata, metadataOptions);
+        if (result.Status.Error)
         {
-            LogError($"UpdateUserMetadata Status.reason:{status.Reason}");
+            LogError($"UpdateUserMetadata Status.reason:{result.Status.Reason}");
         }
         else
         {
-            LogInfo($"UpdateUserMetadata Response ,userId:{response.UserId}");
+            LogInfo($"UpdateUserMetadata Response ,userId:{result.Response.UserId}");
         }
     }
 
@@ -136,15 +136,15 @@ public class StorageManager : AuthenticationManager
 
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
         // Get user metadata asynchronously
-        var (status, response) = await rtmStorage.GetUserMetadataAsync(uid);
-        if (status.Error)
+        var result = await rtmStorage.GetUserMetadataAsync(uid);
+        if (result.Status.Error)
         {
-            LogError($"GetUserMetadata Status.Reason:{status.Reason}");
+            LogError($"GetUserMetadata Status.Reason:{result.Status.Reason}");
         }
         else
         {
-            LogInfo($"GetUserMetadata Response ,userId:{response.UserId}");
-            DisplayRtmMetadata(ref response.Data);
+            LogInfo($"GetUserMetadata Response ,userId:{result.Response.UserId}");
+            DisplayRtmMetadata(ref result.Response.Data);
         }
     }
 
@@ -164,14 +164,14 @@ public class StorageManager : AuthenticationManager
         }
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
         // Subscribe to user metadata asynchronously
-        var (status, response) = await rtmStorage.SubscribeUserMetadataAsync(uid);
-        if (status.Error)
+        var result = await rtmStorage.SubscribeUserMetadataAsync(uid);
+        if (result.Status.Error)
         {
-            LogError($"SubscribeUserMetadata Status.Reason:{status.Reason}");
+            LogError($"SubscribeUserMetadata Status.Reason:{result.Status.Reason}");
         }
         else
         {
-            LogInfo($"SubscribeUserMetadata Response userId:{response.UserId}");
+            LogInfo($"SubscribeUserMetadata Response userId:{result.Response.UserId}");
         }
     }
 
@@ -190,10 +190,10 @@ public class StorageManager : AuthenticationManager
         }
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
         // Unsubscribe from user metadata asynchronously
-        var (status, response) = await rtmStorage.UnsubscribeUserMetadataAsync(uid);
-        if (status.Error)
+        var result = await rtmStorage.UnsubscribeUserMetadataAsync(uid);
+        if (result.Status.Error)
         {
-            LogError($"IRtmStorage.UnsubscribeUserMetadata  ret: {status.ErrorCode}");
+            LogError($"IRtmStorage.UnsubscribeUserMetadata  ret: {result.Status.ErrorCode}");
         }
         else
         {
@@ -217,15 +217,15 @@ public class StorageManager : AuthenticationManager
         }
         IRtmStorage rtmStorage = signalingEngine.GetStorage();
         // Get channel metadata asynchronously
-        var (status, response) = await rtmStorage.GetChannelMetadataAsync(channelName, type);
-        if (status.Error)
+        var result = await rtmStorage.GetChannelMetadataAsync(channelName, type);
+        if (result.Status.Error)
         {
-            LogError($"IRtmStorage.UnsubscribeUserMetadata  ret: {status.Reason}");
+            LogError($"IRtmStorage.UnsubscribeUserMetadata  ret: {result.Status.Reason}");
         }
         else
         {
-            LogInfo($"getChannelMetadata Response :{response}");
-            DisplayRtmMetadata(ref response.Data);
+            LogInfo($"getChannelMetadata channelName :{result.Response.ChannelName}");
+            DisplayRtmMetadata(ref result.Response.Data);
         }
     }
 
