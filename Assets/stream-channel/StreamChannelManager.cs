@@ -68,6 +68,24 @@ public class StreamChannelManager : AuthenticationManager
         }
 
     }
+
+    // Subscribe to a topic to receive messages.
+    public async void SubscribeTopic(string topic)
+    {
+        TopicOptions options = new TopicOptions();
+        var result = await signalingChannel.SubscribeTopicAsync(topic, options);
+        if (result.Status.Error)
+        {
+            Debug.LogError(string.Format("signalingChannel.SubscribeTopicAsync Status.Reason:{0} ", result.Status.Reason));
+        }
+        else
+        {
+            string str = string.Format("signalingChannel.SubscribeTopicAsync Response: channelName:{0} userId:{1} topic:{2}",
+              result.Response.ChannelName, result.Response.UserId, result.Response.Topic);
+            Debug.Log(str);
+        }
+    }
+
     public async void JoinTopic(string topic)
     {
         JoinTopicOptions options = new JoinTopicOptions()
@@ -88,6 +106,7 @@ public class StreamChannelManager : AuthenticationManager
               result.Response.ChannelName, result.Response.UserId, result.Response.Topic, result.Response.Meta);
             isTopicJoined = false;
             LogInfo(str);
+            SubscribeTopic(topic);
         }
     }
 

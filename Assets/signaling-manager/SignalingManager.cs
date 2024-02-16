@@ -42,11 +42,6 @@ public class SignalingManager
     internal bool isSubscribed = false;
     internal UserState[] userStateList;
 
-    // Max messages to display (SerializedField for Unity inspector)
-#pragma warning disable 0649
-    [SerializeField] int maxMessages = 25;
-#pragma warning restore 0649
-
     // Method to set up the signaling engine
     public virtual void SetupSignalingEngine()
     {
@@ -70,6 +65,7 @@ public class SignalingManager
             LogError($"Error initializing RtmClient: {e.Status.ErrorCode}");
         }
 
+        // Register event handlers
         if (signalingEngine != null)
         {
             RegisterEventHandlers();
@@ -84,6 +80,7 @@ public class SignalingManager
         signalingEngine.OnTopicEvent += OnTopicEvent;
         signalingEngine.OnStorageEvent += OnStorageEvent;
         signalingEngine.OnLockEvent += OnLockEvent;
+        signalingEngine.OnConnectionStateChanged += OnConnectStateChanged;
         signalingEngine.OnTokenPrivilegeWillExpire += OnTokenPrivilegeWillExpire;
     }
 
@@ -237,6 +234,13 @@ public class SignalingManager
         string msg = @event.publisher.ToString() + ": " + @event.message.GetData<string>();
         signalingUI.AddTextToDisplay(msg, Color.gray, TextAlignmentOptions.Left);
         await GetOnlineMembersInChannel(configData.channelName);
+    }
+
+    // Method to handle connection state change events
+    public void OnConnectStateChanged(string channelName, RTM_CONNECTION_STATE state, RTM_CONNECTION_CHANGE_REASON reason)
+    {
+        string str = $"OnConnectStateChanged channelName:{channelName} current state: {state} reason: {reason}";
+        LogInfo(str);
     }
 
     // Method to handle presence events
