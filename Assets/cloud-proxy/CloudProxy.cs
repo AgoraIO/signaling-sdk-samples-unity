@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Net;
 
 public class CloudProxy : SignalingUI
 {
@@ -97,14 +98,24 @@ public class CloudProxy : SignalingUI
     {
         base.Update();
 
-        if (userCountObject != null && proxyManager != null && proxyManager.signalingEngine != null)
+        // Check for null before accessing properties or methods
+        if (userCountObject != null)
         {
+            // Update user count with bold formatting
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{proxyManager.userCount}</b>";
 
-            if (proxyManager != null && subscribeBtn != null)
-            {
-                subscribeBtn.GetComponent<Button>().interactable = proxyManager.isLogin;
-            }
+        }
+
+        if (subscribeBtn != null)
+        {
+            // Set interactable based on the condition
+            subscribeBtn.GetComponent<Button>().interactable = proxyManager.isLogin;
+        }
+
+        if (sendBtn != null)
+        {
+            // Set interactable based on the condition
+            sendBtn.GetComponent<Button>().interactable = proxyManager.isSubscribed;
         }
         UpdateButtonStatus();
     }
@@ -130,7 +141,7 @@ public class CloudProxy : SignalingUI
     }
 
     // OnDestroy method to clean up when the object is destroyed
-    void OnDestroy()
+    public override void OnDestroy()
     {
         proxyManager.DestroyEngine();
         DestroyAllUIElements();

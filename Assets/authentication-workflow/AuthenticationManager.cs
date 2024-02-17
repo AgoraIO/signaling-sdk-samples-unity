@@ -74,7 +74,7 @@ public class AuthenticationManager : SignalingManager
 
         string url = string.Format("{0}/rtc/{1}/{2}/uid/{3}/?expiry={4}", configData.serverUrl, channelName , 1 , uid , configData.tokenExpiryTime);
         UnityWebRequest request = UnityWebRequest.Get(url);
-
+        Debug.Log(url);
         var operation = request.SendWebRequest();
 
         while (!operation.isDone)
@@ -84,7 +84,7 @@ public class AuthenticationManager : SignalingManager
 
         if (request.isNetworkError || request.isHttpError)
         {
-            Debug.Log(request.error);
+            LogInfo(request.error);
             return;
         }
 
@@ -108,7 +108,7 @@ public class AuthenticationManager : SignalingManager
             }
 
             // Fetch a rtc token for the stream channel
-            await FetchRtcToken(channelName, "1");
+            await FetchRtcToken(channelName, configData.uid);
 
             if (configData.rtcToken == "")
             {
@@ -196,4 +196,5 @@ public class AuthenticationManager : SignalingManager
             LogError("Token was not retrieved");
         }
     }
+
 }

@@ -100,14 +100,17 @@ public class Signaling : SignalingUI
     {
         base.Update();
 
-        if (userCountObject != null && signalingManager != null && signalingManager.signalingEngine != null)
+        if (userCountObject != null)
         {
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{signalingManager.userCount}</b>";
-
-            if (signalingManager != null && subscribeBtn != null)
-            {
-                subscribeBtn.GetComponent<Button>().interactable = signalingManager.isLogin;
-            }
+        }
+        if ( subscribeBtn!= null)
+        {
+            subscribeBtn.GetComponent<Button>().interactable = signalingManager.isLogin;
+        }
+        if (sendBtn != null)
+        {
+            sendBtn.GetComponent<Button>().interactable = signalingManager.isSubscribed;
         }
         UpdateButtonStatus();
     }

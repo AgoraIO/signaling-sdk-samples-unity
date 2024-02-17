@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Agora.Rtm;
 using TMPro;
-using System;
 using System.Text;
 
 public class StreamChannelManager : AuthenticationManager
@@ -24,17 +21,18 @@ public class StreamChannelManager : AuthenticationManager
             return;
         }
 
+        SubscribeChannel();
         JoinChannelOptions options = new JoinChannelOptions();
         options.token = configData.rtcToken;
         options.withMetadata = false;
         options.withPresence = true;
         options.withLock = false;
-
+     
         var result = await signalingChannel.JoinAsync(options);
         if (result.Status.Error)
         {
             isChannelJoined = false;
-            LogError(string.Format("Join Status.Reason:{0} ", result.Status.ErrorCode));
+            LogError(string.Format("Join Status.Reason:{0} ", result.Status.Reason));
         }
         else
         {
@@ -42,6 +40,19 @@ public class StreamChannelManager : AuthenticationManager
                 result.Response.ChannelName, result.Response.UserId);
             isChannelJoined = true;
             LogInfo(str);
+        }
+    }
+
+    // Subscribe/unsubscribe from the channel
+    public void SubscribeChannel()
+    {
+        if (isSubscribed)
+        {
+            Unsubscribe();
+        }
+        else
+        {
+            Subscribe();
         }
     }
 
@@ -148,7 +159,7 @@ public class StreamChannelManager : AuthenticationManager
         }
 
         TopicMessageOptions options = new TopicMessageOptions();
-
+        options.customType = "byte";
         var result = await signalingChannel.PublishTopicMessageAsync(topic, Encoding.UTF8.GetBytes(msg), options);
         if(result.Status.Error)
         {

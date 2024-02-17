@@ -99,35 +99,33 @@ public class AuthenticationWorkflow : SignalingUI
         base.Update();
 
         // Check for null before accessing properties or methods
-        if (userCountObject != null && authenticationManager != null && authenticationManager.signalingEngine != null)
+        if (userCountObject != null)
         {
             // Update user count with bold formatting
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{authenticationManager.userCount}</b>";
 
-            // Check if authenticationManager and subscribeBtn are not null
-            if (authenticationManager != null && subscribeBtn != null)
-            {
-                // Set interactable based on the condition
-                subscribeBtn.GetComponent<Button>().interactable = authenticationManager.isLogin;
-            }
         }
-        // Update button texts based on login and subscription status
-        if (authenticationManager.isSubscribed)
+
+        if ( subscribeBtn != null)
         {
-            subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Unsubscribed";
+            // Set interactable based on the condition
+            subscribeBtn.GetComponent<Button>().interactable = authenticationManager.isLogin;
         }
-        else
+
+        if (sendBtn != null)
         {
-            subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Subscribe";
+            // Set interactable based on the condition
+            sendBtn.GetComponent<Button>().interactable = authenticationManager.isSubscribed;
         }
-        if (authenticationManager.isLogin)
-        {
-            loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Logout";
-        }
-        else
-        {
-            loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Login";
-        }
+        UpdateButtonStatus();
+
+    }
+
+    // Method to update button text based on subscription and login status
+    private void UpdateButtonStatus()
+    {
+        subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = authenticationManager.isSubscribed ? "Unsubscribed" : "Subscribe";
+        loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = authenticationManager.isLogin ? "Logout" : "Login";
     }
 
     // Subscribe or unsubscribe from the channel
@@ -145,7 +143,7 @@ public class AuthenticationWorkflow : SignalingUI
     }
 
     // OnDestroy method to clean up
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         DestroyAllGameObjects(); // Destroy UI elements
         ClearMessages(); // Clear the chat output section

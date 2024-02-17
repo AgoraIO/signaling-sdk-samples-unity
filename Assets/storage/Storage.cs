@@ -88,34 +88,33 @@ public class Storage : SignalingUI
         base.Update();
 
         // Check for null before accessing properties or methods
-        if (userCountObject != null && storageManager != null && storageManager.signalingEngine != null)
+        if (userCountObject != null)
         {
             // Update user count with bold formatting
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{storageManager.userCount}</b>";
+        }
 
-            // Check if authenticationManager and subscribeBtn are not null
-            if (storageManager != null && subscribeBtn != null)
-            {
-                // Set interactable based on the condition
-                subscribeBtn.GetComponent<Button>().interactable = storageManager.isLogin;
-            }
-        }
-        if (storageManager.isSubscribed)
+        if (subscribeBtn != null)
         {
-            subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Unsubscribed";
+            // Set interactable based on the condition
+            subscribeBtn.GetComponent<Button>().interactable = storageManager.isLogin;
         }
-        else
+
+        if (sendBtn != null)
         {
-            subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Subscribe";
+            // Set interactable based on the condition
+            sendBtn.GetComponent<Button>().interactable = storageManager.isSubscribed;
         }
-        if (storageManager.isLogin)
-        {
-            loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Logout";
-        }
-        else
-        {
-            loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = "Login";
-        }
+        // Update UI
+        UpdateButtonStatus();
+    }
+
+    // Method to update button text based on the state
+    private void UpdateButtonStatus()
+    {
+        // Update button texts based on state
+        loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = storageManager.isLogin ? "Logout" : "Login";
+        subscribeBtn.GetComponentInChildren<TextMeshProUGUI>().text = storageManager.isSubscribed ? "Unsubscribed" : "Subscribe";
     }
 
     // Event handler for updating user metadata
@@ -252,7 +251,7 @@ public class Storage : SignalingUI
     }
 
     // Event handler for destroying the UI elements and clearing messages
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         // Destroy all game objects
         DestroyAllGameObjects();

@@ -50,7 +50,7 @@ public class StreamChannel : SignalingUI
     }
 
     // Toggle channel join/leave
-    private void ToggleChannel()
+    private async void ToggleChannel()
     {
         string channelName = GetInputFieldText("channelNameField");
 
@@ -69,6 +69,9 @@ public class StreamChannel : SignalingUI
                     return;
                 }
                 streamChannelManager.CreateChannel(channelName);
+                await streamChannelManager.FetchRtcToken(channelName, streamChannelManager.configData.uid);
+                streamChannelManager.LogInfo("Channel name :" + channelName);
+                streamChannelManager.LogInfo("Token: " + streamChannelManager.configData.rtcToken);
                 streamChannelManager.JoinStreamChannel();
             }
             else
@@ -149,31 +152,42 @@ public class StreamChannel : SignalingUI
         base.Update();
 
         // Update user count
-        if (userCountObject != null && streamChannelManager != null && streamChannelManager.signalingEngine != null)
+        if (userCountObject != null)
         {
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{streamChannelManager.userCount}</b>";
         }
 
+        // Enable and disable buttons
+        if(joinChannelBtn != null)
+        {
+            joinChannelBtn.GetComponent<Button>().interactable = streamChannelManager.isLogin;
+        }
+
+        if (joinTopicBtn != null)
+        {
+            joinTopicBtn.GetComponent<Button>().interactable = streamChannelManager.isChannelJoined;
+        }
+
+        if (sendTopicMessageBtn != null)
+        {
+            sendTopicMessageBtn.GetComponent<Button>().interactable = streamChannelManager.isTopicJoined;
+        }
+
+        UpdateButtonStatus();
+
+    }
+
+    // Method to update button text based on the state
+    private void UpdateButtonStatus()
+    {
         // Update button texts based on state
         loginBtn.GetComponentInChildren<TextMeshProUGUI>().text = streamChannelManager.isLogin ? "Logout" : "Login";
         joinChannelBtn.GetComponentInChildren<TextMeshProUGUI>().text = streamChannelManager.isChannelJoined ? "Leave" : "Join";
-    }
-
-    // Subscribe/unsubscribe from the channel
-    public void Subscribe()
-    {
-        if (streamChannelManager.isSubscribed)
-        {
-            streamChannelManager.Unsubscribe();
-        }
-        else
-        {
-            streamChannelManager.Subscribe();
-        }
+        joinTopicBtn.GetComponentInChildren<TextMeshProUGUI>().text = streamChannelManager.isChannelJoined ? "Leave topic" : "Join topic";
     }
 
     // Destroy UI elements and clear messages on destroy
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         DestroyAllGameObjects();
         ClearMessages();

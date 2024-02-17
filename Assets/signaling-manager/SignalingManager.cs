@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using TMPro;
-using io.agora.rtm.demo;
 
 // Serializable class for storing configuration data
 [Serializable]
@@ -325,7 +324,10 @@ public class SignalingManager
         signalingEngine?.Dispose();
         signalingEngine = null;
         signalingChannel = null;
-        signalingUI.ClearMessages();
+        if(signalingUI)
+        {
+            signalingUI.ClearMessages();
+        }
     }
 
     // Method to log information

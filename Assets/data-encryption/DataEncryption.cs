@@ -97,14 +97,24 @@ public class DataEncryption : SignalingUI
     {
         base.Update();
 
-        if (userCountObject != null && encryptionManager != null && encryptionManager.signalingEngine != null)
+        // Check for null before accessing properties or methods
+        if (userCountObject != null)
         {
+            // Update user count with bold formatting
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{encryptionManager.userCount}</b>";
 
-            if (encryptionManager != null && subscribeBtn != null)
-            {
-                subscribeBtn.GetComponent<Button>().interactable = encryptionManager.isLogin;
-            }
+        }
+
+        if (subscribeBtn != null)
+        {
+            // Set interactable based on the condition
+            subscribeBtn.GetComponent<Button>().interactable = encryptionManager.isLogin;
+        }
+
+        if (sendBtn != null)
+        {
+            // Set interactable based on the condition
+            sendBtn.GetComponent<Button>().interactable = encryptionManager.isSubscribed;
         }
         UpdateButtonStatus();
     }
@@ -130,7 +140,7 @@ public class DataEncryption : SignalingUI
     }
 
     // OnDestroy method to clean up when the object is destroyed
-    void OnDestroy()
+    public override void OnDestroy()
     {
         encryptionManager.DestroyEngine();
         DestroyAllUIElements();

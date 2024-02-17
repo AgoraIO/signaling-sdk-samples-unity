@@ -96,14 +96,24 @@ public class Geofencing : SignalingUI
     {
         base.Update();
 
-        if (userCountObject != null && geofencingManager != null && geofencingManager.signalingEngine != null)
+        // Check for null before accessing properties or methods
+        if (userCountObject != null)
         {
+            // Update user count with bold formatting
             userCountObject.GetComponent<TextMeshProUGUI>().text = $"User count: <b>{geofencingManager.userCount}</b>";
 
-            if (geofencingManager != null && subscribeBtn != null)
-            {
-                subscribeBtn.GetComponent<Button>().interactable = geofencingManager.isLogin;
-            }
+        }
+
+        if (subscribeBtn != null)
+        {
+            // Set interactable based on the condition
+            subscribeBtn.GetComponent<Button>().interactable = geofencingManager.isLogin;
+        }
+
+        if (sendBtn != null)
+        {
+            // Set interactable based on the condition
+            sendBtn.GetComponent<Button>().interactable = geofencingManager.isSubscribed;
         }
         UpdateButtonStatus();
     }
@@ -129,7 +139,7 @@ public class Geofencing : SignalingUI
     }
 
     // OnDestroy method to clean up when the object is destroyed
-    void OnDestroy()
+    public override void OnDestroy()
     {
         geofencingManager.DestroyEngine();
         DestroyAllUIElements();
